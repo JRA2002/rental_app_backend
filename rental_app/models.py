@@ -2,19 +2,19 @@ from django.db import models
 from users.models import ProfileUser
 
 REGION_CHOICES = [
-    ('I', 'Arica y Parinacota'),
-    ('II', 'Tarapacá'),
-    ('III', 'Antofagasta'),
-    ('IV', 'Atacama'),
-    ('V', 'Coquimbo'),
-    ('VI', 'Valparaíso'),
-    ('VII', 'Libertador General Bernardo O’Higgins'),
-    ('VIII', 'Maule'),
-    ('IX', 'Biobío'),
-    ('X', 'La Araucanía'),
-    ('XI', 'Los Lagos'),
-    ('XII', 'Aysén del General Carlos Ibáñez del Campo'),
-    ('XIII', 'Magallanes y de la Antártica Chilena'),
+    ('I', 'Tarapacá'),
+    ('II', 'Antofagasta'),
+    ('III', 'Atacama'),
+    ('IV', 'Coquimbo'),
+    ('V', 'Valparaíso'),
+    ('RM', 'Región Metropolitana'),
+    ('VI', 'Libertador General Bernardo O’Higgins'),
+    ('VII', 'Maule'),
+    ('VIII', 'Biobío'),
+    ('IX', 'La Araucanía'),
+    ('X', 'Los Lagos'),
+    ('XI', 'Aysén del General Carlos Ibáñez del Campo'),
+    ('XII', 'Magallanes y de la Antártica Chilena'),
     ('XIV', 'Los Ríos'),
     ('XV', 'Arica y Parinacota'),
     ('XVI', 'Ñuble'),
@@ -74,8 +74,8 @@ class Room(models.Model):
         return f"Room {self.property.direction}"
 
 class Tenant(models.Model):
-    tenant = models.OneToOneField(ProfileUser, on_delete=models.CASCADE, primary_key=True, related_name='tenant_profile')
-    reason_leave = models.CharField(max_length=200, blank=True, null=True)
+    tenant = models.OneToOneField(ProfileUser, on_delete=models.CASCADE, related_name='tenant_profile')
+    reason_leave = models.TextField(max_length=200, blank=True, null=True)
     
     def __str__(self):
         return f"Tenant: {self.tenant.name}"
@@ -93,15 +93,15 @@ class Occupation(models.Model):
         return f"{self.tenant.tenant.name} in {self.room} from {self.check_in}"
 
 class Contract(models.Model):
-    user = models.OneToOneField(ProfileUser, on_delete=models.CASCADE, primary_key=True, related_name='contract')
+    user = models.ForeignKey(ProfileUser, on_delete=models.CASCADE, related_name='contract')
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='contracts')
     
     def __str__(self):
         return f"Contract: {self.user.name} - {self.property.direction}"
 
 class Bill(models.Model):
-    utility = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name='bills')
+    utility = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     type = models.CharField(max_length=50, choices=BILL_CHOICES, blank=True, null=True)
     
     def __str__(self):
