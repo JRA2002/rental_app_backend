@@ -50,6 +50,7 @@ BILL_CHOICES = [
 class Property(models.Model):
     region = models.CharField(max_length=30, choices=REGION_CHOICES, blank=True, null=True)
     direction = models.CharField(max_length=200, blank=True, null=True)
+    image = models.ImageField(default="default.png", blank=True, null=True)
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, blank=True, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, blank=True, null=True)
